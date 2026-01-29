@@ -1,0 +1,219 @@
+# Daily Tools - Angular 20 Project Context
+
+## Project Overview
+Daily Tools is a production-ready Angular 20 application demonstrating modern Angular patterns with standalone components, Angular Signals for state management, and RxJS for async operations.
+
+## Technology Stack
+- **Framework**: Angular 20 (standalone API, no NgModules)
+- **Language**: TypeScript 5+ (strict mode enabled)
+- **State Management**: Angular Signals + RxJS (BehaviorSubjects, Observables)
+- **HTTP Client**: HttpClient with functional interceptors
+- **Styling**: SCSS with global variables
+- **Testing**: Karma + Jasmine
+- **Build Tool**: Angular CLI (webpack-based)
+- **Routing**: Functional route guards + lazy-loaded features
+
+## Project Structure
+
+### Root Configuration
+- `angular.json` - Angular CLI configuration with build/serve/test targets
+- `tsconfig.json` - TypeScript configuration (strict mode)
+- `tsconfig.app.json` - Application-specific TypeScript config
+- `tsconfig.spec.json` - Testing TypeScript config
+- `karma.conf.js` - Karma test runner configuration
+- `package.json` - Dependencies and npm scripts
+
+### Source Structure (`src/`)
+
+#### Entry Point
+- `main.ts` - Bootstrap entry point for the application
+- `index.html` - Main HTML template
+
+#### App Root (`src/app/`)
+- `app.component.ts` - Root component (standalone)
+- `app.component.scss` - Root component styles
+- `app.component.spec.ts` - Root component tests
+- `app.routes.ts` - Main router configuration
+- `app.config.ts` - Angular application configuration with providers
+
+### Core Module (`src/app/core/`)
+Singleton services and app-wide infrastructure, never lazy-loaded.
+
+#### Services (`core/services/`)
+- `auth.service.ts` - Authentication state (Signals: isAuthenticated, currentUser)
+- `auth.service.spec.ts` - Authentication service tests
+- `storage.service.ts` - localStorage wrapper with JSON serialization
+- `storage.service.spec.ts` - Storage service tests
+- `api.service.ts` - HTTP wrapper for API calls (if needed)
+
+#### Guards (`core/guards/`)
+- `auth.guard.ts` - Functional route guard protecting authenticated routes
+
+#### Interceptors (`core/interceptors/`)
+- `auth.interceptor.ts` - Adds JWT token to all HTTP requests
+- `error.interceptor.ts` - Global HTTP error handling (401 logout)
+- `loading.interceptor.ts` - Global loading state management
+
+#### Models (`core/models/`)
+- `user.model.ts` - User interface and authentication models (User, LoginRequest, LoginResponse)
+
+### Features Module (`src/app/features/`)
+Lazy-loaded feature modules organized by domain.
+
+#### Auth Feature (`features/auth/`)
+- `auth.routes.ts` - Feature routes (unprotected login route)
+- `auth.store.ts` - Feature-specific state management
+- `pages/login.page.ts` - Login component (standalone)
+- `pages/login.page.scss` - Login styles
+- `pages/login.page.spec.ts` - Login component tests
+
+#### Dashboard Feature (`features/dashboard/`)
+- `dashboard.routes.ts` - Feature routes (protected dashboard route)
+- `dashboard.store.ts` - Feature-specific state management
+- `pages/dashboard.page.ts` - Dashboard component (standalone)
+- `pages/dashboard.page.scss` - Dashboard styles
+- `pages/dashboard.page.spec.ts` - Dashboard component tests
+
+### Shared Module (`src/app/shared/`)
+Reusable, standalone components and utilities (never feature-specific).
+
+#### Components (`shared/components/`)
+- `button/button.component.ts` - Reusable button component
+- `button/button.component.scss` - Button styles
+
+#### Directives (`shared/directives/`)
+- Placeholder for custom directives
+
+#### Pipes (`shared/pipes/`)
+- Placeholder for custom pipes
+
+### Styles (`src/styles/`)
+- `_variables.scss` - Global SCSS variables (colors, typography, spacing) - imported first
+- `styles.scss` - Global base styles, resets, and utility classes
+
+### Environments (`src/environments/`)
+- `environment.ts` - Development environment config (apiUrl, etc.)
+- `environment.prod.ts` - Production environment config
+
+## Key Architecture Patterns
+
+### Data Flow
+1. **Components** inject services and use Signals/Observables
+2. **Services** (core/) manage state with Signals and async operations via Observables
+3. **Interceptors** handle HTTP concerns (auth tokens, errors, loading)
+4. **Storage** persists auth state in localStorage
+
+### Authentication Flow
+1. User logs in at `/auth/login` (unprotected route)
+2. Credentials sent to API via `AuthService.login()`
+3. Token stored in localStorage, Signals updated (isAuthenticated, currentUser)
+4. `authGuard` checks `isAuthenticated()` signal; redirects to login if unauthorized
+5. All HTTP requests include token via `authInterceptor`
+6. 401 errors trigger logout via `errorInterceptor`
+
+### State Management Pattern
+- **Signals** (Angular 20+): Synchronous, component/service state (`isAuthenticated`, `currentUser`)
+- **Observables**: Async operations with RxJS operators (`login()`, HTTP requests)
+- **BehaviorSubjects**: Shared observable state (`authToken$` in AuthService)
+
+### Component Architecture
+- All components are **standalone** (`standalone: true`)
+- Use `OnPush` change detection where applicable
+- Import only used dependencies (no barrel imports)
+- Prefer composition over inheritance
+- Signals for local state, Observables for effects
+
+### Testing Conventions
+- Test files colocated: `*.spec.ts` next to component/service
+- Framework: Jasmine with Karma runner
+- Pattern: Arrange → Act → Assert
+- Mock external dependencies (HttpClient, Services)
+
+## Routing Hierarchy
+```
+/ (root)
+├── redirects to /dashboard
+├── /auth (lazy-loaded, unprotected)
+│   └── /login
+└── /dashboard (lazy-loaded, authGuard protected)
+    └── (dashboard pages)
+```
+
+## Important Entry Points
+1. **Application Entry**: `src/main.ts` → `src/app/app.component.ts`
+2. **Router Config**: `src/app/app.routes.ts` (main routing tree)
+3. **App Config**: `src/app/app.config.ts` (providers, interceptors, animations)
+4. **Auth Service**: `src/app/core/services/auth.service.ts` (state + API)
+5. **Auth Guard**: `src/app/core/guards/auth.guard.ts` (route protection)
+
+## Development Workflow
+
+### Common Commands
+```bash
+npm install              # Install dependencies
+npm start               # Start dev server (http://localhost:4200)
+npm test                # Run tests in watch mode
+npm test -- --watch=false  # Run tests once
+npm run test:coverage   # Generate coverage report
+npm run lint            # Run ESLint
+npm run format          # Run Prettier
+npm run build           # Production build
+```
+
+### Adding a New Feature
+1. Create folder: `src/app/features/{feature-name}/`
+2. Create `{feature-name}.routes.ts` with feature routes
+3. Create `pages/` subfolder with components
+4. Export routes constant and reference in `app.routes.ts`
+5. Add spec files for all components/services
+
+### Adding a Core Service
+1. Create in `src/app/core/services/{name}.service.ts`
+2. Use `@Injectable({ providedIn: 'root' })`
+3. Initialize state in constructor
+4. Create corresponding `*.spec.ts` file
+
+## Code Style & Conventions
+
+### Signals vs Observables
+- **Signals**: Local component state, service state (read synchronously in templates)
+- **Observables**: HTTP requests, async streams (subscribe for side effects with `.pipe()`)
+
+### Import Organization
+- Angular core imports first
+- RxJS imports
+- Local application imports (relative paths)
+- Group related imports together
+
+### Naming Conventions
+- Components: PascalCase with `.component.ts` suffix (e.g., `LoginComponent`)
+- Services: PascalCase with `.service.ts` suffix (e.g., `AuthService`)
+- Features: kebab-case folder names (e.g., `features/auth/`)
+- Routes files: `{feature}.routes.ts`
+- Store files: `{feature}.store.ts` (state management per feature)
+- Pages (feature components): `{page-name}.page.ts`
+- SCSS variables: kebab-case (e.g., `$primary-color`)
+
+## Critical Patterns to Maintain
+
+1. **Standalone Components**: All new components must have `standalone: true`
+2. **Feature Isolation**: Don't import feature-specific components across features
+3. **Core Singleton**: Services in `core/` are never lazy-loaded
+4. **Auth Token Lifecycle**: Interceptors handle token injection and refresh
+5. **Error Handling**: Subscribe with `catchError()` or rely on global `errorInterceptor`
+6. **Testing Coverage**: Every service and component has a `*.spec.ts` file
+
+## Documentation Files
+- `README.md` - Project overview and setup
+- `INSTALLATION.md` - Installation instructions
+- `PROJECT_STRUCTURE.md` - Detailed structure explanation
+- `DEVELOPMENT.md` - Development guidelines
+- `DELIVERABLES.md` - Project deliverables checklist
+- `.github/copilot-instructions.md` - Copilot-specific instructions
+
+## Default Configuration
+- **TypeScript**: Strict mode enabled (`strict: true`)
+- **Style**: SCSS (configured in `angular.json`)
+- **Prefix**: `app` (for component selectors)
+- **Port**: 4200 (dev server)
+- **Output**: `dist/daily-tools/` (build output)
