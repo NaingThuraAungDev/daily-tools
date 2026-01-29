@@ -129,6 +129,9 @@ export const REPORTS_ROUTES: Routes = [
 - Import only what's used (no barrel imports unless in shared)
 - Use `OnPush` change detection where possible
 - Prefer Signals over lifecycle hooks for state updates
+- **Template files**: Use separate `.html` files with `templateUrl` instead of inline `template` properties
+  - Example: Use `templateUrl: './dashboard.page.html'` instead of `template: \`...\``
+  - This keeps component files focused and improves readability
 
 ### Service Patterns
 - Singleton services in `core/` use `providedIn: 'root'`
