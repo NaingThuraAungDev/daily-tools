@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { AuthService } from '@core/services/auth.service';
 
 @Component({
@@ -14,6 +15,11 @@ import { AuthService } from '@core/services/auth.service';
       </div>
 
       <div class="dashboard-grid">
+        <div class="card clickable" (click)="navigateToExchangeRate()">
+          <h2>💱 EX Rate Calculator</h2>
+          <p>Calculate exchange rates between MMK and THB currencies</p>
+        </div>
+
         <div class="card">
           <h2>Quick Stats</h2>
           <p>Your activity metrics appear here</p>
@@ -37,11 +43,16 @@ import { AuthService } from '@core/services/auth.service';
 })
 export class DashboardComponent {
     private readonly authService = inject(AuthService);
+    private readonly router = inject(Router);
 
     public currentUser = () => this.authService.currentUser();
 
     public logout(): void {
         this.authService.logout();
         // Navigation will be handled by route guards
+    }
+
+    public navigateToExchangeRate(): void {
+        this.router.navigate(['/exchange-rate-calculator']);
     }
 }
