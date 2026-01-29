@@ -131,14 +131,12 @@ export class ExchangeRateCalculatorComponent {
         const input = event.target as HTMLInputElement;
         const value = parseFloat(input.value) || 0;
         this.thbMarketPrice.set(value);
-        this.updateThbAmount();
     }
 
     onMmkMarketPriceChange(event: Event): void {
         const input = event.target as HTMLInputElement;
         const value = parseFloat(input.value) || 0;
         this.mmkMarketPrice.set(value);
-        this.updateMmkAmount();
     }
 
     onMmkAmountChange(event: Event): void {
@@ -168,10 +166,16 @@ export class ExchangeRateCalculatorComponent {
     }
 
     swapCurrencies(): void {
-        // Swap market prices
-        const tempMarketPrice = this.thbMarketPrice();
-        this.thbMarketPrice.set(this.mmkMarketPrice());
-        this.mmkMarketPrice.set(tempMarketPrice);
+        // Swap market prices by inverting the relationship
+        // If 1 THB = 48 MMK, after swap it should be 1 MMK = (1/48) THB
+        const currentThb = this.thbMarketPrice();
+        const currentMmk = this.mmkMarketPrice();
+        
+        // After swap: the new THB value becomes 1 and new MMK becomes the inverted ratio
+        if (currentThb > 0) {
+            this.thbMarketPrice.set(currentMmk);
+            this.mmkMarketPrice.set(currentThb);
+        }
 
         // Swap amounts
         const tempAmount = this.mmkAmount();

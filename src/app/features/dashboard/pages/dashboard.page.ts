@@ -15,7 +15,7 @@ import { AuthService } from '@core/services/auth.service';
       </div>
 
       <div class="dashboard-grid">
-        <div class="card clickable" (click)="navigateToExchangeRate()">
+        <div class="card clickable" (click)="navigateToExchangeRate()" (keydown.enter)="navigateToExchangeRate()" (keydown.space)="navigateToExchangeRate(); $event.preventDefault()" tabindex="0" role="button">
           <h2>💱 EX Rate Calculator</h2>
           <p>Calculate exchange rates between MMK and THB currencies</p>
         </div>
