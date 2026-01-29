@@ -104,7 +104,13 @@ export class FormatUtilsService {
       case 'medium':
         return { year: 'numeric', month: 'short', day: 'numeric' };
       case 'long':
-        return { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+        return {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+        };
       default:
         return { year: 'numeric', month: 'short', day: 'numeric' };
     }

@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '@core/services/auth.service';
 
 @Component({
-    selector: 'app-dashboard',
-    standalone: true,
-    imports: [CommonModule],
-    template: `
+  selector: 'app-dashboard',
+  standalone: true,
+  imports: [CommonModule],
+  template: `
     <div class="dashboard">
       <div class="welcome-section">
         <h1>Welcome, {{ currentUser()?.name }}!</h1>
@@ -33,15 +33,15 @@ import { AuthService } from '@core/services/auth.service';
       <button (click)="logout()" class="logout-btn">Logout</button>
     </div>
   `,
-    styleUrls: ['./dashboard.page.scss'],
+  styleUrls: ['./dashboard.page.scss'],
 })
 export class DashboardComponent {
-    private readonly authService = inject(AuthService);
+  private readonly authService = inject(AuthService);
 
-    public currentUser = () => this.authService.currentUser();
+  public currentUser = () => this.authService.currentUser();
 
-    public logout(): void {
-        this.authService.logout();
-        // Navigation will be handled by route guards
-    }
+  public logout(): void {
+    this.authService.logout();
+    // Navigation will be handled by route guards
+  }
 }
