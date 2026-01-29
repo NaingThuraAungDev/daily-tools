@@ -80,6 +80,8 @@ daily-tools/
 │   │   │   │   └── button/                # Reusable button component
 │   │   │   │       ├── button.component.ts
 │   │   │   │       └── button.component.scss
+│   │   │   ├── services/
+│   │   │   │   └── format-utils.service.ts # Formatting utilities (dates, strings, numbers)
 │   │   │   ├── directives/                # Placeholder for custom directives
 │   │   │   └── pipes/                     # Placeholder for custom pipes
 │   │   │
@@ -126,7 +128,8 @@ daily-tools/
 ### Folder Purpose Guide
 
 - **core/**: Singleton services, guards, interceptors, and shared models. Provided at the root level.
-- **shared/**: Reusable UI components, directives, and pipes that can be imported across features.
+- **shared/**: Reusable UI components, directives, pipes, and utility services that can be imported across features.
+  - **services/**: Utility services like `FormatUtilsService` for common formatting tasks
 - **features/**: Feature modules (lazy-loaded) that contain page components, routing, and feature-specific state.
 - **styles/**: Global SCSS variables, mixins, and base styles.
 - **environments/**: Environment-specific configuration.
@@ -411,6 +414,46 @@ export const authGuard = () => {
 
 ---
 
+### 13. Format Utilities Service
+
+**Decision**: Provide a centralized `FormatUtilsService` for common formatting operations
+
+**Benefit**:
+- Consistent data presentation across the application
+- Reusable formatting logic
+- Easy to test and maintain
+- Supports internationalization
+
+**Implementation**:
+```typescript
+import { inject } from '@angular/core';
+import { FormatUtilsService } from '@shared';
+
+export class MyComponent {
+  private formatUtils = inject(FormatUtilsService);
+  
+  formatData() {
+    // Date formatting
+    const dateStr = this.formatUtils.formatDate(new Date(), 'medium');
+    
+    // String manipulation
+    const title = this.formatUtils.capitalizeFirst('hello world');
+    const short = this.formatUtils.truncate('Long text...', 20);
+    
+    // Number formatting
+    const formatted = this.formatUtils.formatNumber(1234567, 2);
+    
+    // File size
+    const size = this.formatUtils.formatFileSize(1572864); // "1.5 MB"
+    
+    // Relative time
+    const when = this.formatUtils.getRelativeTime(new Date()); // "2 hours ago"
+  }
+}
+```
+
+---
+
 ## Running, Building, and Testing
 
 ### Development Server
@@ -553,6 +596,8 @@ npm run format:check
 ✅ **ESLint & Prettier** - Code quality and formatting
 
 ✅ **Responsive Design** - Mobile-friendly UI components
+
+✅ **Format Utilities** - Comprehensive formatting service for dates, strings, numbers, and file sizes
 
 ### Technology Stack
 

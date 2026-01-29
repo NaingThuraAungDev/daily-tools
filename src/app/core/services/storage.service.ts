@@ -1,34 +1,34 @@
 import { Injectable } from '@angular/core';
 
 @Injectable({
-    providedIn: 'root',
+  providedIn: 'root',
 })
 export class StorageService {
-    public setItem(key: string, value: string): void {
-        localStorage.setItem(key, value);
-    }
+  public setItem(key: string, value: string): void {
+    localStorage.setItem(key, value);
+  }
 
-    public getItem(key: string): string | null {
-        return localStorage.getItem(key);
-    }
+  public getItem(key: string): string | null {
+    return localStorage.getItem(key);
+  }
 
-    public removeItem(key: string): void {
-        localStorage.removeItem(key);
-    }
+  public removeItem(key: string): void {
+    localStorage.removeItem(key);
+  }
 
-    public clear(): void {
-        localStorage.clear();
-    }
+  public clear(): void {
+    localStorage.clear();
+  }
 
-    public setSession(key: string, value: string): void {
-        sessionStorage.setItem(key, value);
-    }
+  public setSession(key: string, value: string): void {
+    sessionStorage.setItem(key, value);
+  }
 
-    public getSession(key: string): string | null {
-        return sessionStorage.getItem(key);
-    }
+  public getSession(key: string): string | null {
+    return sessionStorage.getItem(key);
+  }
 
-    public removeSession(key: string): void {
-        sessionStorage.removeItem(key);
-    }
+  public removeSession(key: string): void {
+    sessionStorage.removeItem(key);
+  }
 }

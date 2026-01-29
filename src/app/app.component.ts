@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
-    selector: 'app-root',
-    standalone: true,
-    imports: [CommonModule, RouterOutlet],
-    template: `
+  selector: 'app-root',
+  standalone: true,
+  imports: [CommonModule, RouterOutlet],
+  template: `
     <div class="app-container">
       <header class="app-header">
         <h1>Daily Tools</h1>
@@ -16,8 +16,8 @@ import { RouterOutlet } from '@angular/router';
       </main>
     </div>
   `,
-    styleUrls: ['./app.component.scss'],
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-    public title = signal('Daily Tools');
+  public title = signal('Daily Tools');
 }

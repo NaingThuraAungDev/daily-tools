@@ -9,11 +9,9 @@ import { errorInterceptor } from './core/interceptors/error.interceptor';
 import { loadingInterceptor } from './core/interceptors/loading.interceptor';
 
 export const appConfig: ApplicationConfig = {
-    providers: [
-        provideRouter(appRoutes),
-        provideHttpClient(
-            withInterceptors([authInterceptor, errorInterceptor, loadingInterceptor])
-        ),
-        provideAnimations(),
-    ],
+  providers: [
+    provideRouter(appRoutes),
+    provideHttpClient(withInterceptors([authInterceptor, errorInterceptor, loadingInterceptor])),
+    provideAnimations(),
+  ],
 };
