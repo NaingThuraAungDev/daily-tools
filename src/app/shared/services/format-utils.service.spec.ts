@@ -88,6 +88,17 @@ describe('FormatUtilsService', () => {
     it('should handle empty string', () => {
       expect(service.truncate('', 10)).toBe('');
     });
+
+    it('should throw error for maxLength less than 4', () => {
+      expect(() => service.truncate('test', 3)).toThrow();
+      expect(() => service.truncate('test', 2)).toThrow();
+      expect(() => service.truncate('test', 1)).toThrow();
+    });
+
+    it('should handle minimal valid maxLength of 4', () => {
+      const result = service.truncate('hello world', 4);
+      expect(result).toBe('h...');
+    });
   });
 
   describe('formatNumber', () => {
@@ -125,6 +136,14 @@ describe('FormatUtilsService', () => {
       expect(service.formatFileSize(1610612736)).toBe('1.5 GB');
     });
 
+    it('should format terabytes', () => {
+      expect(service.formatFileSize(1649267441664)).toBe('1.5 TB');
+    });
+
+    it('should format petabytes', () => {
+      expect(service.formatFileSize(1688849860263936)).toBe('1.5 PB');
+    });
+
     it('should handle zero bytes', () => {
       expect(service.formatFileSize(0)).toBe('0 Bytes');
     });
@@ -132,6 +151,17 @@ describe('FormatUtilsService', () => {
     it('should round to 2 decimal places', () => {
       const result = service.formatFileSize(1234);
       expect(result).toMatch(/^\d+\.\d{2} KB$/);
+    });
+
+    it('should throw error for negative bytes', () => {
+      expect(() => service.formatFileSize(-1)).toThrow();
+      expect(() => service.formatFileSize(-1024)).toThrow();
+    });
+
+    it('should cap at PB for extremely large values', () => {
+      const veryLarge = 1688849860263936 * 10000; // Much larger than PB
+      const result = service.formatFileSize(veryLarge);
+      expect(result).toContain('PB');
     });
   });
 
@@ -158,14 +188,29 @@ describe('FormatUtilsService', () => {
       expect(service.getRelativeTime(date)).toBe('15 minutes ago');
     });
 
+    it('should return singular "minute ago" for 1 minute', () => {
+      const date = new Date('2026-01-15T11:59:00');
+      expect(service.getRelativeTime(date)).toBe('1 minute ago');
+    });
+
     it('should return hours ago for past hours', () => {
       const date = new Date('2026-01-15T09:00:00');
       expect(service.getRelativeTime(date)).toBe('3 hours ago');
     });
 
+    it('should return singular "hour ago" for 1 hour', () => {
+      const date = new Date('2026-01-15T11:00:00');
+      expect(service.getRelativeTime(date)).toBe('1 hour ago');
+    });
+
     it('should return days ago for past days', () => {
       const date = new Date('2026-01-13T12:00:00');
       expect(service.getRelativeTime(date)).toBe('2 days ago');
+    });
+
+    it('should return singular "day ago" for 1 day', () => {
+      const date = new Date('2026-01-14T12:00:00');
+      expect(service.getRelativeTime(date)).toBe('1 day ago');
     });
 
     it('should return formatted date for dates beyond a week', () => {
@@ -180,14 +225,29 @@ describe('FormatUtilsService', () => {
       expect(service.getRelativeTime(date)).toBe('in 30 minutes');
     });
 
+    it('should handle future times with singular "in 1 minute"', () => {
+      const date = new Date('2026-01-15T12:01:00');
+      expect(service.getRelativeTime(date)).toBe('in 1 minute');
+    });
+
     it('should handle future times with "in X hours"', () => {
       const date = new Date('2026-01-15T15:00:00');
       expect(service.getRelativeTime(date)).toBe('in 3 hours');
     });
 
+    it('should handle future times with singular "in 1 hour"', () => {
+      const date = new Date('2026-01-15T13:00:00');
+      expect(service.getRelativeTime(date)).toBe('in 1 hour');
+    });
+
     it('should handle future times with "in X days"', () => {
       const date = new Date('2026-01-17T12:00:00');
       expect(service.getRelativeTime(date)).toBe('in 2 days');
+    });
+
+    it('should handle future times with singular "in 1 day"', () => {
+      const date = new Date('2026-01-16T12:00:00');
+      expect(service.getRelativeTime(date)).toBe('in 1 day');
     });
   });
 });

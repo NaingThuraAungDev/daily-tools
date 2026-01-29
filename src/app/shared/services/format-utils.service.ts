@@ -32,11 +32,14 @@ export class FormatUtilsService {
   /**
    * Truncates a string to a specified length with ellipsis
    * @param str - String to truncate
-   * @param maxLength - Maximum length before truncation
+   * @param maxLength - Maximum length before truncation (must be at least 4)
    * @returns Truncated string
    */
   truncate(str: string, maxLength: number): string {
     if (!str || str.length <= maxLength) return str;
+    if (maxLength < 4) {
+      throw new Error('maxLength must be at least 4 to accommodate ellipsis');
+    }
     return str.substring(0, maxLength - 3) + '...';
   }
 
@@ -55,15 +58,18 @@ export class FormatUtilsService {
 
   /**
    * Converts bytes to human-readable file size
-   * @param bytes - Number of bytes
+   * @param bytes - Number of bytes (must be non-negative)
    * @returns Formatted file size string (e.g., "1.5 MB")
    */
   formatFileSize(bytes: number): string {
+    if (bytes < 0) {
+      throw new Error('Bytes must be non-negative');
+    }
     if (bytes === 0) return '0 Bytes';
 
     const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB'];
+    const i = Math.min(Math.floor(Math.log(bytes) / Math.log(k)), sizes.length - 1);
 
     return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
   }
@@ -84,11 +90,17 @@ export class FormatUtilsService {
     if (Math.abs(diffSec) < 60) {
       return 'just now';
     } else if (Math.abs(diffMin) < 60) {
-      return diffMin > 0 ? `in ${diffMin} minutes` : `${Math.abs(diffMin)} minutes ago`;
+      const absDiffMin = Math.abs(diffMin);
+      const minLabel = absDiffMin === 1 ? 'minute' : 'minutes';
+      return diffMin > 0 ? `in ${absDiffMin} ${minLabel}` : `${absDiffMin} ${minLabel} ago`;
     } else if (Math.abs(diffHour) < 24) {
-      return diffHour > 0 ? `in ${diffHour} hours` : `${Math.abs(diffHour)} hours ago`;
+      const absDiffHour = Math.abs(diffHour);
+      const hourLabel = absDiffHour === 1 ? 'hour' : 'hours';
+      return diffHour > 0 ? `in ${absDiffHour} ${hourLabel}` : `${absDiffHour} ${hourLabel} ago`;
     } else if (Math.abs(diffDay) < 7) {
-      return diffDay > 0 ? `in ${diffDay} days` : `${Math.abs(diffDay)} days ago`;
+      const absDiffDay = Math.abs(diffDay);
+      const dayLabel = absDiffDay === 1 ? 'day' : 'days';
+      return diffDay > 0 ? `in ${absDiffDay} ${dayLabel}` : `${absDiffDay} ${dayLabel} ago`;
     }
 
     return this.formatDate(date, 'short');
