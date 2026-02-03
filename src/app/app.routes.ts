@@ -18,6 +18,14 @@ export const appRoutes: Routes = [
             import('./features/dashboard/dashboard.routes').then((m) => m.DASHBOARD_ROUTES),
     },
     {
+        path: 'exchange-rate-calculator',
+        canActivate: [authGuard],
+        loadChildren: () =>
+            import('./features/exchange-rate-calculator/exchange-rate-calculator.routes').then(
+                (m) => m.EXCHANGE_RATE_CALCULATOR_ROUTES
+            ),
+    },
+    {
         path: '**',
         redirectTo: 'dashboard',
     },
