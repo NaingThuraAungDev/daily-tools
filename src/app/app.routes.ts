@@ -18,6 +18,11 @@ export const appRoutes: Routes = [
             import('./features/dashboard/dashboard.routes').then((m) => m.DASHBOARD_ROUTES),
     },
     {
+        path: 'converter',
+        loadChildren: () =>
+            import('./features/converter/converter.routes').then((m) => m.CONVERTER_ROUTES),
+    },
+    {
         path: '**',
         redirectTo: 'dashboard',
     },
