@@ -1,0 +1,242 @@
+.calculator-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1rem;
+
+    @media (min-width: 768px) {
+        padding: 2rem 1rem;
+    }
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+
+    h1 {
+        margin: 0;
+        font-size: 1.5rem;
+        color: #333;
+
+        @media (min-width: 768px) {
+            font-size: 2rem;
+        }
+    }
+}
+
+.back-btn {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    color: #333;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+
+    svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    &:hover {
+        background-color: #f5f5f5;
+        border-color: #667eea;
+        color: #667eea;
+    }
+}
+
+.market-price-section {
+    background-color: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+
+    h2 {
+        margin: 0 0 1.5rem 0;
+        font-size: 1.2rem;
+        color: #333;
+    }
+}
+
+.market-price-inputs {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+
+    @media (min-width: 640px) {
+        flex-wrap: nowrap;
+    }
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+    min-width: 120px;
+
+    label {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #666;
+    }
+
+    input {
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+
+        &:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+    }
+}
+
+.equals-sign {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #666;
+    margin-top: 1.5rem;
+
+    @media (max-width: 639px) {
+        margin-top: 0;
+    }
+}
+
+.rate-display {
+    margin: 1rem 0 0 0;
+    padding: 0.75rem;
+    background-color: white;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 0.95rem;
+    color: #667eea;
+    font-weight: 600;
+}
+
+.conversion-section {
+    h2 {
+        margin: 0 0 1.5rem 0;
+        font-size: 1.2rem;
+        color: #333;
+    }
+}
+
+.conversion-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
+
+    @media (min-width: 768px) {
+        flex-direction: row;
+        align-items: flex-end;
+    }
+}
+
+.input-wrapper {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    label {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #333;
+    }
+}
+
+.input-with-flag {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    padding: 0 1rem;
+    transition: border-color 0.3s ease;
+
+    &:focus-within {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .flag {
+        font-size: 1.5rem;
+        margin-right: 0.75rem;
+    }
+
+    input {
+        flex: 1;
+        padding: 1rem 0;
+        border: none;
+        font-size: 1.25rem;
+        font-weight: 500;
+        outline: none;
+
+        &::placeholder {
+            color: #ccc;
+        }
+    }
+
+    .currency-code {
+        margin-left: 0.75rem;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #666;
+    }
+}
+
+.swap-btn {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-family: inherit;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 48px;
+    height: 48px;
+    background-color: #667eea;
+    color: white;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+    margin: 0.5rem 0;
+
+    svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    &:hover {
+        background-color: #5568d3;
+        transform: rotate(180deg);
+    }
+
+    &:active {
+        transform: rotate(180deg) scale(0.95);
+    }
+
+    @media (min-width: 768px) {
+        margin: 0 1rem 0.5rem 1rem;
+    }
+}
+
